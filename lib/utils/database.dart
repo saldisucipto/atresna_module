@@ -25,7 +25,6 @@ class DatabaseHelper {
         dbPath,
         options: OpenDatabaseOptions(
           version: 1,
-          onCreate: _onCreate,
         ),
       );
       return winLinuxDB;
@@ -35,22 +34,20 @@ class DatabaseHelper {
       final iOSAndroidDB = await openDatabase(
         path,
         version: 1,
-        onCreate: _onCreate,
       );
       return iOSAndroidDB;
     }
     throw Exception("Unsupported platform");
   }
 
-  Future<void> _onCreate(Database database, int version) async {
+  Future<void> createUserTable(Database database, int version) async {
     final db = database;
     await db.execute(""" CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY,
-            name TEXT,
-            email TEXT,
-            password INTEGER,
-            phoneNumber INTEGER
-          )
+            name TEXT NOT NULL,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL
+            )
  """);
   }
 }
